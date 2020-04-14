@@ -1,0 +1,15 @@
+import java.net.*;
+import java.io.*;
+import java.util.*;
+public class myServer {
+	public static ArrayList<Socket>socketList=new ArrayList<Socket>();
+	public static void main(String[] args)throws IOException{
+	ServerSocket ss=new ServerSocket(30000);
+	while(true) {
+		Socket s=ss.accept();
+		socketList.add(s);
+		new Thread(new ServerThread(s)).start();
+		System.out.println(s.getInputStream());
+	}
+	}
+}

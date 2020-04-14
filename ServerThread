@@ -1,0 +1,35 @@
+import java.io.*;
+import java.net.*;
+public class ServerThread implements Runnable{
+	Socket s=null;
+	BufferedReader br=null;
+	public ServerThread(Socket s)throws IOException{
+		this.s=s;
+		br=new BufferedReader(new InputStreamReader(s.getInputStream(),"utf-8"));
+		
+	}
+	public void run() {
+		try {
+			String content=null;
+			while((content=readFromClient())!=null) {
+				for(Socket s:myServer.socketList) {
+					OutputStream os=s.getOutputStream();
+					os.write((content+"\n").getBytes("utf-8"));
+				}
+			}
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+			//s.remove();
+		}
+	}
+	private String readFromClient() {
+		try {
+			return br.readLine();
+		}
+		catch(IOException e) {
+			myServer.socketList.remove(s);
+		}
+		return null;
+	}
+}
